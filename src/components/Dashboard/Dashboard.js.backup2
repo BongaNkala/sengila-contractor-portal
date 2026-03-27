@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import {
   Container,
   Grid,
@@ -97,7 +97,7 @@ const GlassStatCard = ({ title, value, icon, color, change }) => (
       </Box>
       <Avatar
         sx={{
-          bgcolor: color + '30',
+          bgcolor: ${color}30,
           color: color,
           width: 56,
           height: 56,
@@ -117,7 +117,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({});
   const [tabValue, setTabValue] = useState(0);
-  const [weather] = useState({ temp: 24, condition: 'Sunny', icon: '??' });
+  const [weather] = useState({ temp: 24, condition: 'Sunny', icon: '☀️' });
   const [activityFeed] = useState([
     { id: 1, user: 'John Doe', action: 'submitted daily report', project: 'Thuto Tsebo', time: '5 min ago', type: 'report' },
     { id: 2, user: 'Mike Smith', action: 'updated BOQ progress', project: 'Sunrise Primary', time: '15 min ago', type: 'update' },
@@ -264,7 +264,7 @@ const Dashboard = () => {
                   <Stack direction="row" spacing={3} sx={{ mt: 2 }}>
                     {[
                       { label: 'Active Projects', value: stats.active, icon: <Build sx={{ fontSize: 20 }} /> },
-                      { label: 'Completion Rate', value: stats.averageProgress + '%', icon: <TrendingUp sx={{ fontSize: 20 }} /> },
+                      { label: 'Completion Rate', value: ${stats.averageProgress}%, icon: <TrendingUp sx={{ fontSize: 20 }} /> },
                       { label: 'Team Members', value: stats.totalTeam, icon: <Group sx={{ fontSize: 20 }} /> },
                     ].map((stat, idx) => (
                       <Box key={idx} sx={{ textAlign: 'center' }}>
@@ -308,7 +308,7 @@ const Dashboard = () => {
                         </Typography>
                         <Box>
                           <Typography variant="h3" sx={{ fontWeight: 700, color: 'white' }}>
-                            {weather.temp}�C
+                            {weather.temp}°C
                           </Typography>
                           <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.6)' }}>
                             {weather.condition}
@@ -414,8 +414,8 @@ const Dashboard = () => {
           <Grid container spacing={3} sx={{ mb: 6 }}>
             {[
               { title: 'Active Projects', value: stats.active, icon: <Build />, color: '#3b82f6', change: '+2' },
-              { title: 'Completion Rate', value: stats.averageProgress + '%', icon: <TrendingUp />, color: '#10b981', change: '+5%' },
-              { title: 'Total Budget', value: 'R ' + (stats.totalBudget / 1000000).toFixed(1) + 'M', icon: <AttachMoney />, color: '#f59e0b', change: '+12%' },
+              { title: 'Completion Rate', value: ${stats.averageProgress}%, icon: <TrendingUp />, color: '#10b981', change: '+5%' },
+              { title: 'Total Budget', value: R M, icon: <AttachMoney />, color: '#f59e0b', change: '+12%' },
               { title: 'Safety Score', value: '98%', icon: <Security />, color: '#8b5cf6', change: '+1%' },
               { title: 'Documents', value: stats.totalDocuments, icon: <Description />, color: '#ec489a', change: '+8' },
               { title: 'Team Members', value: stats.totalTeam, icon: <Group />, color: '#14b8a6', change: '+3' },
@@ -449,7 +449,7 @@ const Dashboard = () => {
                 <ResponsiveContainer width="100%" height={300}>
                   <PieChart>
                     <Pie data={budgetData} cx="50%" cy="50%" innerRadius={60} outerRadius={100} paddingAngle={5} dataKey="value">
-                      {budgetData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
+                      {budgetData.map((entry, index) => <Cell key={cell-} fill={entry.color} />)}
                     </Pie>
                     <RechartsTooltip contentStyle={{ background: 'rgba(0,0,0,0.8)', border: 'none', borderRadius: 8 }} />
                   </PieChart>
@@ -509,8 +509,8 @@ const Dashboard = () => {
                               <Chip icon={<Update />} label={project.updates} size="small" sx={{ background: 'rgba(255,255,255,0.1)', color: 'white' }} />
                               <Chip icon={<Group />} label={project.team.length} size="small" sx={{ background: 'rgba(255,255,255,0.1)', color: 'white' }} />
                             </Stack>
-                            <Button fullWidth onClick={() => navigate(/projects/)} sx={{ mt: 1, background: 'linear-gradient(135deg, ' + health.color + '40 0%, ' + health.color + '60 100%)', color: 'white', '&:hover': { background: 'linear-gradient(135deg, ' + health.color + '50 0%, ' + health.color + '70 100%)', transform: 'translateY(-2px)' } }}>
-                              View Details ?
+                            <Button fullWidth onClick={() => navigate(/projects/)} sx={{ mt: 1, background: linear-gradient(135deg, 40 0%, 60 100%), color: 'white', '&:hover': { background: linear-gradient(135deg, 50 0%, 70 100%), transform: 'translateY(-2px)' } }}>
+                              View Details →
                             </Button>
                           </CardContent>
                         </GlassCard>
@@ -558,12 +558,12 @@ const Dashboard = () => {
             ].map((action, index) => (
               <Grid item xs={12} md={4} key={index}>
                 <GlassCard sx={{ p: 4, textAlign: 'center' }}>
-                  <Box sx={{ display: 'inline-flex', p: 2, borderRadius: '50%', background: action.color + '20', color: action.color, mb: 2 }}>
+                  <Box sx={{ display: 'inline-flex', p: 2, borderRadius: '50%', background: ${action.color}20, color: action.color, mb: 2 }}>
                     {React.cloneElement(action.icon, { sx: { fontSize: 48 } })}
                   </Box>
                   <Typography variant="h6" sx={{ color: 'white', mb: 1 }}>{action.title}</Typography>
                   <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', mb: 2 }}>{action.desc}</Typography>
-                  <Button variant="contained" startIcon={action.icon} sx={{ background: 'linear-gradient(135deg, ' + action.color + ' 0%, ' + action.color + 'dd 100%)', '&:hover': { transform: 'translateY(-2px)', boxShadow: '0 8px 20px ' + action.color + '40' } }}>
+                  <Button variant="contained" startIcon={action.icon} sx={{ background: linear-gradient(135deg,  0%, dd 100%), '&:hover': { transform: 'translateY(-2px)', boxShadow:   8px 20px 40 } }}>
                     Get Started
                   </Button>
                 </GlassCard>
@@ -577,4 +577,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
