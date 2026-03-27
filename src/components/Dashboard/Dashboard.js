@@ -1,0 +1,580 @@
+﻿import React, { useState, useEffect } from 'react';
+import {
+  Container,
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Box,
+  CircularProgress,
+  Chip,
+  LinearProgress,
+  Avatar,
+  Stack,
+  IconButton,
+  Tabs,
+  Tab,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Divider,
+  Tooltip,
+} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { 
+  AreaChart, Area, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, 
+  Tooltip as RechartsTooltip, ResponsiveContainer 
+} from 'recharts';
+import MainLayout from '../Layout/MainLayout';
+import {
+  Business,
+  TrendingUp,
+  CheckCircle,
+  Warning,
+  Build,
+  Speed,
+  Timeline,
+  Analytics,
+  AttachMoney,
+  CalendarToday,
+  LocationOn,
+  Security,
+  DarkMode,
+  LightMode,
+  Description,
+  Schedule,
+  Group,
+  InsertChart,
+  Timeline as TimelineIcon,
+  Message,
+  Share,
+  Update,
+  AutoAwesome,
+} from '@mui/icons-material';
+
+const useDarkMode = () => {
+  const [darkMode, setDarkMode] = useState(false);
+  return { darkMode, setDarkMode };
+};
+
+const GlassCard = ({ children, sx = {}, ...props }) => (
+  <Card
+    sx={{
+      background: 'rgba(255, 255, 255, 0.1)',
+      backdropFilter: 'blur(20px)',
+      border: '1px solid rgba(255, 255, 255, 0.2)',
+      borderRadius: 4,
+      boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      '&:hover': {
+        transform: 'translateY(-4px)',
+        boxShadow: '0 12px 48px 0 rgba(31, 38, 135, 0.25)',
+        border: '1px solid rgba(255, 255, 255, 0.3)',
+      },
+      ...sx,
+    }}
+    {...props}
+  >
+    {children}
+  </Card>
+);
+
+const GlassStatCard = ({ title, value, icon, color, change }) => (
+  <GlassCard sx={{ p: 2 }}>
+    <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Box>
+        <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', mb: 1 }}>
+          {title}
+        </Typography>
+        <Typography variant="h3" sx={{ fontWeight: 700, color: 'white', mb: 0.5 }}>
+          {value}
+        </Typography>
+        <Typography variant="caption" sx={{ color: '#10b981' }}>
+          {change} this month
+        </Typography>
+      </Box>
+      <Avatar
+        sx={{
+          bgcolor: color + '30',
+          color: color,
+          width: 56,
+          height: 56,
+          backdropFilter: 'blur(10px)',
+        }}
+      >
+        {icon}
+      </Avatar>
+    </Box>
+  </GlassCard>
+);
+
+const Dashboard = () => {
+  const navigate = useNavigate();
+  const { darkMode, setDarkMode } = useDarkMode();
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({});
+  const [tabValue, setTabValue] = useState(0);
+  const [weather] = useState({ temp: 24, condition: 'Sunny', icon: '??' });
+  const [activityFeed] = useState([
+    { id: 1, user: 'John Doe', action: 'submitted daily report', project: 'Thuto Tsebo', time: '5 min ago', type: 'report' },
+    { id: 2, user: 'Mike Smith', action: 'updated BOQ progress', project: 'Sunrise Primary', time: '15 min ago', type: 'update' },
+    { id: 3, user: 'Sarah Johnson', action: 'uploaded new drawings', project: 'Thuto Tsebo', time: '1 hour ago', type: 'document' },
+    { id: 4, user: 'Tom Wilson', action: 'completed safety inspection', project: 'Sunrise Primary', time: '2 hours ago', type: 'safety' },
+  ]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      const mockProjects = [
+        {
+          id: 1,
+          project_code: 'SCH001',
+          school_name: 'Thuto Tsebo Secondary School',
+          location: 'Johannesburg',
+          status: 'active',
+          health_status: 'green',
+          overall_progress: 45,
+          start_date: '2024-01-01',
+          end_date: '2024-12-31',
+          budget: 5000000,
+          spent: 2250000,
+          documents: 23,
+          updates: 12,
+          team: ['John Doe', 'Mike Smith', 'Sarah Johnson'],
+        },
+        {
+          id: 2,
+          project_code: 'SCH002',
+          school_name: 'Sunrise Primary School',
+          location: 'Pretoria',
+          status: 'active',
+          health_status: 'yellow',
+          overall_progress: 30,
+          start_date: '2024-02-01',
+          end_date: '2024-11-30',
+          budget: 3500000,
+          spent: 1050000,
+          documents: 15,
+          updates: 8,
+          team: ['Jane Doe', 'Tom Wilson'],
+        },
+      ];
+      setProjects(mockProjects);
+      
+      setStats({
+        total: mockProjects.length,
+        active: mockProjects.filter(p => p.status === 'active').length,
+        totalBudget: mockProjects.reduce((sum, p) => sum + p.budget, 0),
+        averageProgress: Math.round(mockProjects.reduce((sum, p) => sum + p.overall_progress, 0) / mockProjects.length),
+        totalDocuments: mockProjects.reduce((sum, p) => sum + p.documents, 0),
+        totalTeam: mockProjects.reduce((sum, p) => sum + p.team.length, 0),
+      });
+      setLoading(false);
+    }, 800);
+  }, []);
+
+  const progressData = [
+    { month: 'Jan', progress: 15, target: 20 },
+    { month: 'Feb', progress: 28, target: 30 },
+    { month: 'Mar', progress: 42, target: 40 },
+    { month: 'Apr', progress: 55, target: 50 },
+    { month: 'May', progress: 68, target: 65 },
+    { month: 'Jun', progress: 75, target: 75 },
+  ];
+
+  const budgetData = [
+    { name: 'Materials', value: 45, color: '#3b82f6' },
+    { name: 'Labor', value: 30, color: '#10b981' },
+    { name: 'Equipment', value: 15, color: '#f59e0b' },
+    { name: 'Other', value: 10, color: '#8b5cf6' },
+  ];
+
+  const getHealthColor = (status) => {
+    switch(status) {
+      case 'green': return { bg: 'rgba(16,185,129,0.2)', color: '#10b981', icon: <CheckCircle sx={{ fontSize: 16 }} /> };
+      case 'yellow': return { bg: 'rgba(245,158,11,0.2)', color: '#f59e0b', icon: <Warning sx={{ fontSize: 16 }} /> };
+      default: return { bg: 'rgba(100,116,139,0.2)', color: '#94a3b8', icon: <Build sx={{ fontSize: 16 }} /> };
+    }
+  };
+
+  if (loading) {
+    return (
+      <MainLayout showHeader={true}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '80vh' }}>
+          <CircularProgress size={60} thickness={4} sx={{ color: 'white' }} />
+        </Box>
+      </MainLayout>
+    );
+  }
+
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+  return (
+    <MainLayout showHeader={true}>
+      <Box sx={{ minHeight: '100vh', py: 4 }}>
+        <Container maxWidth="xl">
+          {/* Animated Header Section */}
+          <Box sx={{ mb: 6 }}>
+            <Grid container spacing={3} alignItems="center">
+              {/* Left side - Greeting */}
+              <Grid item xs={12} md={7}>
+                <Box>
+                  <Typography
+                    variant="overline"
+                    sx={{
+                      color: 'rgba(255,255,255,0.6)',
+                      letterSpacing: 2,
+                      fontWeight: 500,
+                      mb: 1,
+                      display: 'block',
+                    }}
+                  >
+                    WELCOME BACK
+                  </Typography>
+                  <Typography
+                    variant="h2"
+                    sx={{
+                      fontWeight: 800,
+                      background: 'linear-gradient(135deg, #fff 0%, #e0e7ff 50%, #c7d2fe 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      mb: 2,
+                      fontSize: { xs: '2rem', md: '3rem' },
+                    }}
+                  >
+                    {user.name || user.username}
+                  </Typography>
+                  <Box display="flex" alignItems="center" gap={2} sx={{ mb: 3 }}>
+                    <Box
+                      sx={{
+                        width: 4,
+                        height: 40,
+                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        borderRadius: 2,
+                      }}
+                    />
+                    <Typography variant="body1" sx={{ color: 'rgba(255,255,255,0.8)' }}>
+                      Here's what's happening with your construction projects today
+                    </Typography>
+                  </Box>
+                  
+                  {/* Dynamic Stats Row */}
+                  <Stack direction="row" spacing={3} sx={{ mt: 2 }}>
+                    {[
+                      { label: 'Active Projects', value: stats.active, icon: <Build sx={{ fontSize: 20 }} /> },
+                      { label: 'Completion Rate', value: stats.averageProgress + '%', icon: <TrendingUp sx={{ fontSize: 20 }} /> },
+                      { label: 'Team Members', value: stats.totalTeam, icon: <Group sx={{ fontSize: 20 }} /> },
+                    ].map((stat, idx) => (
+                      <Box key={idx} sx={{ textAlign: 'center' }}>
+                        <Box display="flex" alignItems="center" gap={1} sx={{ mb: 1 }}>
+                          <Box sx={{ color: '#667eea' }}>{stat.icon}</Box>
+                          <Typography variant="h4" sx={{ fontWeight: 700, color: 'white' }}>
+                            {stat.value}
+                          </Typography>
+                        </Box>
+                        <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.5)' }}>
+                          {stat.label}
+                        </Typography>
+                      </Box>
+                    ))}
+                  </Stack>
+                </Box>
+              </Grid>
+
+              {/* Right side - Date & Weather Card */}
+              <Grid item xs={12} md={5}>
+                <GlassCard sx={{ p: 3 }}>
+                  <Grid container spacing={2} alignItems="center">
+                    {/* Date Section */}
+                    <Grid item xs={6}>
+                      <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.5)', mb: 1, display: 'block' }}>
+                        TODAY'S DATE
+                      </Typography>
+                      <Typography variant="h5" sx={{ fontWeight: 700, color: 'white', mb: 0.5 }}>
+                        {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.6)' }}>
+                        {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric' })}
+                      </Typography>
+                    </Grid>
+                    
+                    {/* Weather Section */}
+                    <Grid item xs={6}>
+                      <Box display="flex" alignItems="center" justifyContent="flex-end" gap={1}>
+                        <Typography variant="h1" sx={{ fontSize: '3rem', fontWeight: 500 }}>
+                          {weather.icon}
+                        </Typography>
+                        <Box>
+                          <Typography variant="h3" sx={{ fontWeight: 700, color: 'white' }}>
+                            {weather.temp}�C
+                          </Typography>
+                          <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.6)' }}>
+                            {weather.condition}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Grid>
+                  </Grid>
+                  
+                  {/* Decorative Line */}
+                  <Box
+                    sx={{
+                      height: 1,
+                      background: 'linear-gradient(90deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%)',
+                      my: 2,
+                    }}
+                  />
+                  
+                  {/* Quick Stats */}
+                  <Box display="flex" justifyContent="space-between">
+                    <Box>
+                      <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.5)', display: 'block' }}>
+                        Today's Progress
+                      </Typography>
+                      <Typography variant="h6" sx={{ fontWeight: 700, color: '#10b981' }}>
+                        +12%
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.5)', display: 'block' }}>
+                        Next Milestone
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: 'white' }}>
+                        15 days
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.5)', display: 'block' }}>
+                        Projects
+                      </Typography>
+                      <Typography variant="h6" sx={{ fontWeight: 700, color: '#3b82f6' }}>
+                        {stats.active}/{stats.total}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </GlassCard>
+              </Grid>
+            </Grid>
+          </Box>
+
+          {/* Enhanced Status Chips */}
+          <Stack direction="row" spacing={2} sx={{ mb: 6, flexWrap: 'wrap', gap: 2, justifyContent: 'center' }}>
+            <Chip
+              icon={<Timeline />}
+              label="Live Updates"
+              sx={{
+                background: 'rgba(59,130,246,0.2)',
+                backdropFilter: 'blur(10px)',
+                color: '#60a5fa',
+                border: '1px solid rgba(59,130,246,0.3)',
+                '&:hover': { background: 'rgba(59,130,246,0.3)' },
+              }}
+            />
+            <Chip
+              icon={<Analytics />}
+              label="AI Analytics"
+              sx={{
+                background: 'rgba(139,92,246,0.2)',
+                backdropFilter: 'blur(10px)',
+                color: '#c084fc',
+                border: '1px solid rgba(139,92,246,0.3)',
+                '&:hover': { background: 'rgba(139,92,246,0.3)' },
+              }}
+            />
+            <Chip
+              icon={<Speed />}
+              label="Real-time Sync"
+              sx={{
+                background: 'rgba(16,185,129,0.2)',
+                backdropFilter: 'blur(10px)',
+                color: '#34d399',
+                border: '1px solid rgba(16,185,129,0.3)',
+                '&:hover': { background: 'rgba(16,185,129,0.3)' },
+              }}
+            />
+            <Chip
+              icon={<AutoAwesome />}
+              label="Premium Experience"
+              sx={{
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                color: 'white',
+                border: 'none',
+                boxShadow: '0 4px 15px rgba(102,126,234,0.3)',
+                '&:hover': {
+                  transform: 'translateY(-2px)',
+                  boxShadow: '0 6px 20px rgba(102,126,234,0.4)',
+                },
+              }}
+            />
+          </Stack>
+
+          {/* Stats Cards */}
+          <Grid container spacing={3} sx={{ mb: 6 }}>
+            {[
+              { title: 'Active Projects', value: stats.active, icon: <Build />, color: '#3b82f6', change: '+2' },
+              { title: 'Completion Rate', value: stats.averageProgress + '%', icon: <TrendingUp />, color: '#10b981', change: '+5%' },
+              { title: 'Total Budget', value: 'R ' + (stats.totalBudget / 1000000).toFixed(1) + 'M', icon: <AttachMoney />, color: '#f59e0b', change: '+12%' },
+              { title: 'Safety Score', value: '98%', icon: <Security />, color: '#8b5cf6', change: '+1%' },
+              { title: 'Documents', value: stats.totalDocuments, icon: <Description />, color: '#ec489a', change: '+8' },
+              { title: 'Team Members', value: stats.totalTeam, icon: <Group />, color: '#14b8a6', change: '+3' },
+            ].map((stat, index) => (
+              <Grid item xs={12} sm={6} md={4} lg={2} key={index}>
+                <GlassStatCard {...stat} />
+              </Grid>
+            ))}
+          </Grid>
+
+          {/* Charts Section */}
+          <Grid container spacing={3} sx={{ mb: 6 }}>
+            <Grid item xs={12} md={6}>
+              <GlassCard sx={{ p: 3 }}>
+                <Typography variant="h6" sx={{ color: 'white', mb: 2, fontWeight: 600 }}>Project Progress Trend</Typography>
+                <ResponsiveContainer width="100%" height={300}>
+                  <AreaChart data={progressData}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                    <XAxis dataKey="month" stroke="rgba(255,255,255,0.5)" />
+                    <YAxis stroke="rgba(255,255,255,0.5)" />
+                    <RechartsTooltip contentStyle={{ background: 'rgba(0,0,0,0.8)', border: 'none', borderRadius: 8 }} />
+                    <Area type="monotone" dataKey="progress" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.3} />
+                    <Area type="monotone" dataKey="target" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.1} />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </GlassCard>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <GlassCard sx={{ p: 3 }}>
+                <Typography variant="h6" sx={{ color: 'white', mb: 2, fontWeight: 600 }}>Budget Distribution</Typography>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie data={budgetData} cx="50%" cy="50%" innerRadius={60} outerRadius={100} paddingAngle={5} dataKey="value">
+                      {budgetData.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)}
+                    </Pie>
+                    <RechartsTooltip contentStyle={{ background: 'rgba(0,0,0,0.8)', border: 'none', borderRadius: 8 }} />
+                  </PieChart>
+                </ResponsiveContainer>
+                <Box display="flex" justifyContent="center" gap={3} flexWrap="wrap" sx={{ mt: 2 }}>
+                  {budgetData.map((item) => (
+                    <Box key={item.name} display="flex" alignItems="center" gap={1}>
+                      <Box sx={{ width: 12, height: 12, bgcolor: item.color, borderRadius: 2 }} />
+                      <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)' }}>{item.name} ({item.value}%)</Typography>
+                    </Box>
+                  ))}
+                </Box>
+              </GlassCard>
+            </Grid>
+          </Grid>
+
+          {/* Tabs Section */}
+          <GlassCard sx={{ mb: 6 }}>
+            <Tabs
+              value={tabValue}
+              onChange={(e, v) => setTabValue(v)}
+              sx={{ px: 3, pt: 2, '& .MuiTab-root': { color: 'rgba(255,255,255,0.7)', '&.Mui-selected': { color: 'white' } } }}
+              TabIndicatorProps={{ sx: { background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', height: 3, borderRadius: 3 } }}
+            >
+              <Tab label="Active Projects" icon={<Build />} iconPosition="start" />
+              <Tab label="Activity Feed" icon={<TimelineIcon />} iconPosition="start" />
+            </Tabs>
+
+            {tabValue === 0 && (
+              <Box sx={{ p: 3 }}>
+                <Grid container spacing={3}>
+                  {projects.filter(p => p.status === 'active').map((project, index) => {
+                    const health = getHealthColor(project.health_status);
+                    return (
+                      <Grid item xs={12} md={6} lg={4} key={project.id}>
+                        <GlassCard sx={{ height: '100%', position: 'relative', overflow: 'visible' }}>
+                          <Box sx={{ position: 'absolute', top: -12, right: 20, background: health.color, color: 'white', px: 2, py: 0.5, borderRadius: 2, fontSize: '0.75rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                            {health.icon}{project.health_status.toUpperCase()}
+                          </Box>
+                          <CardContent>
+                            <Typography variant="h6" sx={{ color: 'white', fontWeight: 700, mb: 1 }}>{project.school_name}</Typography>
+                            <Box display="flex" alignItems="center" gap={1} sx={{ mb: 2 }}>
+                              <LocationOn sx={{ fontSize: 14, color: 'rgba(255,255,255,0.5)' }} />
+                              <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)' }}>{project.location}</Typography>
+                              <CalendarToday sx={{ fontSize: 14, color: 'rgba(255,255,255,0.5)', ml: 1 }} />
+                              <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.7)' }}>{project.end_date}</Typography>
+                            </Box>
+                            <Box sx={{ mb: 2 }}>
+                              <Box display="flex" justifyContent="space-between" sx={{ mb: 1 }}>
+                                <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>Progress</Typography>
+                                <Typography variant="body2" fontWeight={600} sx={{ color: 'white' }}>{project.overall_progress}%</Typography>
+                              </Box>
+                              <LinearProgress variant="determinate" value={project.overall_progress} sx={{ height: 8, borderRadius: 4, bgcolor: 'rgba(255,255,255,0.2)', '& .MuiLinearProgress-bar': { bgcolor: health.color, borderRadius: 4 } }} />
+                            </Box>
+                            <Stack direction="row" spacing={1} sx={{ mb: 2 }}>
+                              <Chip icon={<Description />} label={project.documents} size="small" sx={{ background: 'rgba(255,255,255,0.1)', color: 'white' }} />
+                              <Chip icon={<Update />} label={project.updates} size="small" sx={{ background: 'rgba(255,255,255,0.1)', color: 'white' }} />
+                              <Chip icon={<Group />} label={project.team.length} size="small" sx={{ background: 'rgba(255,255,255,0.1)', color: 'white' }} />
+                            </Stack>
+                            <Button fullWidth onClick={() => navigate(/projects/)} sx={{ mt: 1, background: 'linear-gradient(135deg, ' + health.color + '40 0%, ' + health.color + '60 100%)', color: 'white', '&:hover': { background: 'linear-gradient(135deg, ' + health.color + '50 0%, ' + health.color + '70 100%)', transform: 'translateY(-2px)' } }}>
+                              View Details ?
+                            </Button>
+                          </CardContent>
+                        </GlassCard>
+                      </Grid>
+                    );
+                  })}
+                </Grid>
+              </Box>
+            )}
+
+            {tabValue === 1 && (
+              <Box sx={{ p: 3 }}>
+                <List>
+                  {activityFeed.map((activity, index) => (
+                    <React.Fragment key={activity.id}>
+                      <ListItem>
+                        <ListItemAvatar>
+                          <Avatar sx={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+                            {activity.type === 'report' && <Message />}
+                            {activity.type === 'update' && <Update />}
+                            {activity.type === 'document' && <Description />}
+                            {activity.type === 'safety' && <Security />}
+                          </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={<Typography sx={{ color: 'white' }}><strong>{activity.user}</strong> {activity.action} for <strong>{activity.project}</strong></Typography>}
+                          secondary={<Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.5)' }}>{activity.time}</Typography>}
+                        />
+                        <IconButton size="small" sx={{ color: 'rgba(255,255,255,0.5)' }}><Share /></IconButton>
+                      </ListItem>
+                      {index < activityFeed.length - 1 && <Divider sx={{ background: 'rgba(255,255,255,0.1)' }} />}
+                    </React.Fragment>
+                  ))}
+                </List>
+              </Box>
+            )}
+          </GlassCard>
+
+          {/* Quick Actions */}
+          <Grid container spacing={3}>
+            {[
+              { title: 'Submit Daily Report', icon: <Description />, color: '#3b82f6', desc: 'Log your daily work activities and progress' },
+              { title: 'Update BOQ', icon: <InsertChart />, color: '#10b981', desc: 'Track material consumption and progress' },
+              { title: 'View Timeline', icon: <Schedule />, color: '#f59e0b', desc: 'Interactive Gantt chart with critical path' },
+            ].map((action, index) => (
+              <Grid item xs={12} md={4} key={index}>
+                <GlassCard sx={{ p: 4, textAlign: 'center' }}>
+                  <Box sx={{ display: 'inline-flex', p: 2, borderRadius: '50%', background: action.color + '20', color: action.color, mb: 2 }}>
+                    {React.cloneElement(action.icon, { sx: { fontSize: 48 } })}
+                  </Box>
+                  <Typography variant="h6" sx={{ color: 'white', mb: 1 }}>{action.title}</Typography>
+                  <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', mb: 2 }}>{action.desc}</Typography>
+                  <Button variant="contained" startIcon={action.icon} sx={{ background: 'linear-gradient(135deg, ' + action.color + ' 0%, ' + action.color + 'dd 100%)', '&:hover': { transform: 'translateY(-2px)', boxShadow: '0 8px 20px ' + action.color + '40' } }}>
+                    Get Started
+                  </Button>
+                </GlassCard>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      </Box>
+    </MainLayout>
+  );
+};
+
+export default Dashboard;
+
