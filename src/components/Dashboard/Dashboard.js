@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+ï»¿import React, { useState, useEffect } from 'react';
 import {
   Container,
   Grid,
@@ -308,7 +308,7 @@ const Dashboard = () => {
                         </Typography>
                         <Box>
                           <Typography variant="h3" sx={{ fontWeight: 700, color: 'white' }}>
-                            {weather.temp}°C
+                            {weather.temp}ï¿½C
                           </Typography>
                           <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.6)' }}>
                             {weather.condition}
